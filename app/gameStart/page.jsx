@@ -32,12 +32,13 @@ const GameStart = () => {
   const handleStartGame = () => {
     if (players && playerNames.length === parseInt(players) && playerAnimals.length === parseInt(players)) {
       const allNamesFilled = playerNames.every(name => name.trim() !== '')
-      if (allNamesFilled) {
+      const allAnimalsSelected = playerAnimals.every(animal => animal.trim() !== '')
+      if (allNamesFilled && allAnimalsSelected) {
         router.push(`/game?players=${players}&names=${playerNames.join(',')}&animals=${playerAnimals.join(',')}`)
       } else {
         toast({
-          title: "Nom manquant",
-          description: "Tous les joueurs doivent entrer leur nom.",
+          title: "Qui sont les bikers ?",
+          description: "Tous les joueurs doivent entrer leur nom et choisir un personnage.",
         })
       }
     } else {
@@ -68,7 +69,7 @@ const GameStart = () => {
     <div className="flex flex-col items-center">
       <div className="bg-3 h-96 flex flex-col justify-center items-center w-screen">
         <Link href="/">
-          <Image src="/img/logo.png" alt="biker" width={100} height={100} />
+          <Image src="/img/logo.png" alt="biker" width={200} height={200} />
         </Link>
         <h1 className="text-6xl font-bRiver mt-8 text-center">Combien de bikers dans la partie ?</h1>
         <div className="mt-8 w-full max-w-md">
@@ -88,11 +89,11 @@ const GameStart = () => {
           </Select>
         </div>
       </div>
-      <div className="absolute left-0 top-[6.6rem] max-lg:top-[25rem] max-lg:left-[-5rem]">
-        <Image src="/img/Lapine.png" alt="biker" width={200} height={100} />
+      <div className="absolute left-0 top-[6.6rem] max-lg:top-12 max-lg:left-[-3rem] max-lg:w-24">
+        <Image src="/img/Lapine.png" alt="biker" width={200} height={200} />
       </div>
-      <div className="absolute right-0 top-[6.6rem] max-lg:top-[25rem] max-lg:right-[-6rem]">
-        <Image src="/img/Nounours.png" alt="biker" width={200} height={100} />
+      <div className="absolute right-0 top-[6.6rem] max-lg:top-14 max-lg:right-[-3rem] max-lg:w-24">
+        <Image src="/img/Nounours.png" alt="biker" width={200} height={200} />
       </div>
       <div className="h-96 flex justify-center items-center flex-col w-full">
         <h2 className="text-3xl font-bRiver mb-4 text-center">Tout est bon ?</h2>
