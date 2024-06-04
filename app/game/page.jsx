@@ -1,12 +1,13 @@
 'use client'
 
 import React, { useState, useEffect, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from "next/link";
 import { Home } from "lucide-react";
 import CardRoad from "../components/Cards/CardRoad";
 import HandPlayer from "../components/Cards/HandPlayer";
 import roadBoard from '../datas/roadBoard';
+import { Button } from '@/components/ui/button';
 
 const shuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
@@ -102,23 +103,15 @@ const GameComponent = () => {
     setCurrentPlayer((prevPlayer) => (prevPlayer + 1) % players);
   };
 
+  const router = useRouter();
+
   return (
     <div>
-      <Link href="/">
-        <Home className="w-6 h-6" />
-      </Link>
-      <h1>JEU</h1>
+      <Button onClick={() => router.push("/")}>
+        Quitter le jeu
+      </Button>
       <div className="mt-10">
-        <h2>Pioche</h2>
-        <div className="pioche" onClick={drawCard}>
-          {deck.map((card, index) => (
-            <CardRoad key={index} card={card} isFaceUp={false} style={{ position: 'absolute', top: `${index * 0.5}px`, left: `${index * 0.5}px`, zIndex: index }} />
-          ))}
-        </div>
-      </div>
-      <div className="mt-10">
-        <h2>Plateau</h2>
-        <div className="mx-auto w-[50%]">
+        <div className="mx-auto w-[50%] max-lg:w-full">
           <div className="plateau grid grid-cols-5 gap-0">
             {board.map((card, index) => (
               <CardRoad key={index} card={card} isFaceUp={card.id !== 'fake'} />
@@ -127,7 +120,7 @@ const GameComponent = () => {
         </div>
       </div>
       <div className="mt-10">
-        <h2>{playerNames[currentPlayer]} - {playerPions[currentPlayer]} (Votre tour)</h2>
+        <h1 className='text-2xl font-bRiver'>Au tour de : {playerNames[currentPlayer]} - {playerPions[currentPlayer]}</h1>
         {playerHands[currentPlayer] && (
           <>
             <HandPlayer
@@ -135,7 +128,9 @@ const GameComponent = () => {
               isHandSpread={true}
               onCardClick={(cardIndex) => placeCardOnBoard(cardIndex)}
             />
-            <button onClick={drawCard}>Tirer une carte</button>
+            <div className="flex justify-center">
+              <Button className="mt-10 w-[200px]" onClick={drawCard}>Tirer une carte</Button>
+            </div>
           </>
         )}
       </div>

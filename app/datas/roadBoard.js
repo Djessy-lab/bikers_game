@@ -154,19 +154,7 @@ const roadBoard = [
   {
     name: "angle10",
     image: "/img/plateau/angle10.png",
-  },
-  {
-    name: "bloque",
-    image: "/img/plateau/bloque.png",
-  },
-  {
-    name: "bloque2",
-    image: "/img/plateau/bloque2.png",
-  },
-  {
-    name: "bloque3",
-    image: "/img/plateau/bloque3.png",
-  },
+  }
 ]
 
 export default roadBoard;
