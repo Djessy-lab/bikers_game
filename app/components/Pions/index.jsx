@@ -15,11 +15,11 @@ const Pions = () => {
   const playerNames = names ? names.split(',') : []
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex">
       {pieces.map((piece, index) => (
         <div key={index} className="flex flex-col items-center">
           <Image src={`${basePath}${piece}.png`} className='ml-4 rotate-90' alt={`Pièce de ${piece}`} width={100} height={100} priority />
-          <p className="mt-2">{playerNames[index]}</p>
+          <p className="mt-10 ml-4 text-2xl font-bRiver">{playerNames[index]}</p>
         </div>
       ))}
     </div>
