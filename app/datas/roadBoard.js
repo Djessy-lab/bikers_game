@@ -80,10 +80,6 @@ const roadBoard = [
     image: "/img/plateau/croisement6.png",
   },
   {
-    name: "depart",
-    image: "/img/plateau/depart.png",
-  },
-  {
     name: "perpendiculaire",
     image: "/img/plateau/perpendiculaire.png",
   },
@@ -118,10 +114,6 @@ const roadBoard = [
   {
     name: "perpendiculaire9",
     image: "/img/plateau/perpendiculaire9.png",
-  },
-  {
-    name: "arrivée",
-    image: "/img/plateau/arrivée.png",
   },
   {
     name: "angle",
@@ -175,23 +167,6 @@ const roadBoard = [
     name: "bloque3",
     image: "/img/plateau/bloque3.png",
   },
-  {
-    name: "aideLapine",
-    image: "/img/plateau/aideLapine.png",
-  },
-  {
-    name: "aideLouve",
-    image: "/img/plateau/aideLouve.png",
-  },
-  {
-    name: "aideNounours",
-    image: "/img/plateau/aideNounours.png",
-  },
-  {
-    name: "aideSanglier",
-    image: "/img/plateau/aideLapine.png",
-  },
 ]
 
 export default roadBoard;
-

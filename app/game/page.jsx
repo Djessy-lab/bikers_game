@@ -25,6 +25,24 @@ const getCardCount = (players) => {
   }
 };
 
+const initializeBoard = (playerPions) => {
+  const board = Array(25).fill({ id: 'fake', name: 'Fake Card', image: '/img/logo.png' });
+  board[0] = { id: 'depart', name: 'depart', image: '/img/plateau/depart.png' };
+  board[24] = { id: 'arrivee', name: 'arrivée', image: '/img/plateau/arrivée.png' };
+
+
+  playerPions.forEach((pion, index) => {
+    const aideCard = { id: `aide${pion}`, name: `aide${pion}`, image: `/img/plateau/aide${pion}.png` };
+    let randomIndex;
+    do {
+      randomIndex = Math.floor(Math.random() * 23) + 1;
+    } while (board[randomIndex].id !== 'fake');
+    board[randomIndex] = aideCard;
+  });
+
+  return board;
+};
+
 const GameComponent = () => {
   const searchParams = useSearchParams();
   const players = parseInt(searchParams.get('players'), 10) || 2;
@@ -33,7 +51,7 @@ const GameComponent = () => {
 
   const [deck, setDeck] = useState([]);
   const [playerHands, setPlayerHands] = useState([]);
-  const [board, setBoard] = useState([]);
+  const [board, setBoard] = useState(initializeBoard(playerPions));
   const [currentPlayer, setCurrentPlayer] = useState(0);
 
   useEffect(() => {
@@ -64,8 +82,13 @@ const GameComponent = () => {
   const placeCardOnBoard = (cardIndex) => {
     const newPlayerHands = [...playerHands];
     const card = newPlayerHands[currentPlayer].splice(cardIndex, 1)[0];
+    const newBoard = [...board];
+    const emptyIndex = newBoard.findIndex(c => c.id === 'fake');
+    if (emptyIndex !== -1) {
+      newBoard[emptyIndex] = card;
+    }
     setPlayerHands(newPlayerHands);
-    setBoard([...board, card]);
+    setBoard(newBoard);
     endTurn();
   };
 
@@ -83,16 +106,18 @@ const GameComponent = () => {
         <h2>Pioche</h2>
         <div className="pioche" onClick={drawCard}>
           {deck.map((card, index) => (
-            <CardRoad key={index} card={card} isFaceUp={false} style={{ position: 'absolute', top: `${index * 2}px`, left: `${index * 2}px`, zIndex: index }} />
+            <CardRoad key={index} card={card} isFaceUp={false} style={{ position: 'absolute', top: `${index * 0.5}px`, left: `${index * 0.5}px`, zIndex: index }} />
           ))}
         </div>
       </div>
       <div className="mt-10">
         <h2>Plateau</h2>
-        <div className="plateau grid grid-cols-5 gap-4">
-          {board.map((card, index) => (
-            <CardRoad key={index} card={card} isFaceUp={true} />
-          ))}
+        <div className="mx-auto w-[50%]">
+          <div className="plateau grid grid-cols-5 gap-0">
+            {board.map((card, index) => (
+              <CardRoad key={index} card={card} isFaceUp={card.id !== 'fake'} />
+            ))}
+          </div>
         </div>
       </div>
       <div className="mt-10">
