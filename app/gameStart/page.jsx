@@ -16,10 +16,10 @@ import { useToast } from "@/components/ui/use-toast"
 import { Input } from "@/components/ui/input"
 
 const animalImages = {
-  lapine: "/img/pions/pionlapine.png",
-  nounours: "/img/pions/pionnounours.png",
-  louve: "/img/pions/pionlouve.png",
-  sanglier: "/img/pions/pionsanglier.png",
+  lapine: "/img/pions/pionLapine.png",
+  nounours: "/img/pions/pionNounours.png",
+  louve: "/img/pions/pionLouve.png",
+  sanglier: "/img/pions/pionSanglier.png",
 }
 
 const GameStart = () => {
