@@ -108,8 +108,8 @@
 .dice {
   position: relative;
   transform-style: preserve-3d;
-  width: 6rem; /* 24 * 0.25rem */
-  height: 6rem; /* 24 * 0.25rem */
+  width: 6rem;
+  height: 6rem;
 }
 
 .face {
@@ -120,12 +120,12 @@
   align-items: center;
   justify-content: center;
   background: white;
-  border: 0.25rem solid lightgray; /* 4 * 0.25rem */
-  border-radius: 0.5rem; /* rounded-lg */
+  border: 0.25rem solid lightgray;
+  border-radius: 0.5rem;
   box-sizing: border-box;
 }
 
-.front  { transform: translateZ(3rem); } /* 24 * 0.25rem / 2 */
+.front  { transform: translateZ(3rem); } 
 .back   { transform: rotateY(180deg) translateZ(3rem); }
 .left   { transform: rotateY(-90deg) translateZ(3rem); }
 .right  { transform: rotateY(90deg) translateZ(3rem); }
