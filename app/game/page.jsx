@@ -26,13 +26,19 @@ const getCardCount = (players) => {
 };
 
 const initializeBoard = (playerPions) => {
+  const animalImages = {
+    lapine: "/img/plateau/aideLapine.png",
+    nounours: "/img/plateau/aideNounours.png",
+    louve: "/img/plateau/aideLouve.png",
+    sanglier: "/img/plateau/aideSanglier.png",
+  };
+
   const board = Array(25).fill({ id: 'fake', name: 'Fake Card', image: '/img/logo.png' });
   board[0] = { id: 'depart', name: 'depart', image: '/img/plateau/depart.png' };
   board[24] = { id: 'arrivee', name: 'arrivée', image: '/img/plateau/arrivée.png' };
 
-
   playerPions.forEach((pion, index) => {
-    const aideCard = { id: `aide${pion}`, name: `aide${pion}`, image: `/img/plateau/aide${pion}.png` };
+    const aideCard = { id: `aide${pion}`, name: `aide${pion}`, image: animalImages[pion] || '/img/logo.png' };
     let randomIndex;
     do {
       randomIndex = Math.floor(Math.random() * 23) + 1;
