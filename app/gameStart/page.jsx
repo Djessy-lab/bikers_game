@@ -92,7 +92,7 @@ const GameStart = () => {
       <div className="absolute left-0 top-[6.6rem] max-lg:top-12 max-lg:left-[-3rem] max-lg:w-24">
         <Image src="/img/Lapine.png" alt="biker" width={200} height={200} />
       </div>
-      <div className="absolute right-0 top-[6.6rem] max-lg:top-14 max-lg:right-[-3rem] max-lg:w-24">
+      <div className="absolute right-0 top-[6.6rem] max-lg:top-14 max-lg:right-2 max-lg:w-24">
         <Image src="/img/Nounours.png" alt="biker" width={200} height={200} />
       </div>
       <div className="h-96 flex justify-center items-center flex-col w-full">
