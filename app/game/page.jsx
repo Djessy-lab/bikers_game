@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from "next/link";
 import { Home } from "lucide-react";
@@ -25,7 +25,7 @@ const getCardCount = (players) => {
   }
 };
 
-const Game = () => {
+const GameComponent = () => {
   const searchParams = useSearchParams();
   const players = parseInt(searchParams.get('players'), 10) || 2;
   const playerNames = searchParams.get('names') ? searchParams.get('names').split(',') : Array(players).fill('Joueur');
@@ -83,7 +83,7 @@ const Game = () => {
         <h2>Pioche</h2>
         <div className="pioche" onClick={drawCard}>
           {deck.map((card, index) => (
-            <CardRoad key={index} card={card} isFaceUp={false} style={{ position: 'absolute', top: `${index * 0.5}px`, left: `${index * 0.5}px`, zIndex: index }} />
+            <CardRoad key={index} card={card} isFaceUp={false} style={{ position: 'absolute', top: `${index * 2}px`, left: `${index * 2}px`, zIndex: index }} />
           ))}
         </div>
       </div>
@@ -111,5 +111,11 @@ const Game = () => {
     </div>
   );
 };
+
+const Game = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <GameComponent />
+  </Suspense>
+);
 
 export default Game;
