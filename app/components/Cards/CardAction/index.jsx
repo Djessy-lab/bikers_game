@@ -1,17 +1,6 @@
-'use client'
-
-import Image from 'next/image';
-import React, { useState, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../../../../components/ui/card';
-import cards from '../../../datas/cards';
-
-const shuffleArray = (array) => {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-};
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { default as Image } from "next/image";
+import { useState } from "react";
 
 const CardAction = ({ card, style }) => {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -22,9 +11,9 @@ const CardAction = ({ card, style }) => {
 
   return (
     <div className='flex justify-center items-center mt-10' style={style}>
-      <div className="relative w-72 h-96 perspective-1000" onClick={handleCardClick}>
+      <div className="relative w-72 h-[21rem] perspective-1000" onClick={handleCardClick}>
         <div className={`absolute w-full h-full rounded-sm shadow-md transform-style-preserve-3d transition-transform duration-1000 ${isFlipped ? 'rotate-y-180' : ''}`}>
-          <div className={`absolute w-full h-full bg-4 text-white flex justify-center items-center rounded-sm shadow-md backface-hidden`}>
+          <div className={`absolute w-full h-full bg-4 text-white flex justify-center items-center rounded-sm shadow-sm backface-hidden`}>
             <div className="flex flex-col items-center">
               <p className='text-4xl text-1 font-bRiver'>Carte Action</p>
               <Image src="/img/bikers.png" className='ml-4' alt="Card Back" width={200} height={200} priority />
@@ -36,15 +25,15 @@ const CardAction = ({ card, style }) => {
                 <CardTitle>{card.category}</CardTitle>
                 {card.description && <CardDescription>{card.description}</CardDescription>}
               </CardHeader>
-              <CardContent className="overflow-y-auto">
-                {card.question && <p>{card.question}</p>}
+              <CardContent className="text-sm">
+                {card.question && <p className="font-bold">{card.question}</p>}
                 {card.action && <p>{card.action}</p>}
                 {card.answers && (
-                  <ul>
+                  <ol>
                     {card.answers.map((answer, index) => (
-                      <li key={index}>{answer.label}</li>
+                      <li key={index} className='list-decimal'>{answer.label}</li>
                     ))}
-                  </ul>
+                  </ol>
                 )}
               </CardContent>
               <CardFooter>
@@ -58,39 +47,4 @@ const CardAction = ({ card, style }) => {
   );
 };
 
-const CardActionContainer = () => {
-  const [deck, setDeck] = useState([]);
-
-  useEffect(() => {
-    setDeck(shuffleArray([...cards]));
-  }, []);
-
-  const [currentCard, setCurrentCard] = useState(null);
-
-  useEffect(() => {
-    if (deck.length > 0) {
-      setCurrentCard(deck[0]);
-    }
-  }, [deck]);
-
-  const drawCard = () => {
-    if (deck.length > 1) {
-      const newDeck = deck.slice(1);
-      setDeck(newDeck);
-      setCurrentCard(newDeck[0]);
-    } else {
-      alert("Toutes les cartes ont été tirées !");
-    }
-  };
-
-  return (
-    <div className="relative">
-      <button onClick={drawCard} className="mb-4 p-2 bg-blue-500 text-white rounded">Tirer une carte</button>
-      {Array.isArray(deck) && deck.map((card, index) => (
-        <CardAction key={index} card={card} style={{ position: 'absolute', top: `${index * 0.5}px`, left: `${index * 0.5}px`, zIndex: deck.length - index }} />
-      ))}
-    </div>
-  );
-};
-
-export default CardActionContainer;
+export default CardAction;

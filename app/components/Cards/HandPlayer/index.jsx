@@ -4,21 +4,23 @@ import CardRoad from '../CardRoad';
 const HandPlayer = ({ playerHand, isHandSpread, onCardClick }) => {
   return (
     <div className="player-hand">
-      <div className={`flex relative ${isHandSpread ? 'grid grid-cols-4 gap-4' : ''}`}>
-        {playerHand.map((card, cardIndex) => (
-          <div key={cardIndex} onClick={() => onCardClick(cardIndex)}>
-            <CardRoad
-              card={card}
-              isFaceUp={isHandSpread}
-              style={{
-                position: isHandSpread ? 'relative' : 'absolute',
-                top: isHandSpread ? 'auto' : `${cardIndex * 0.5}px`,
-                left: isHandSpread ? 'auto' : `${cardIndex * 0.5}px`,
-                zIndex: isHandSpread ? 0 : cardIndex,
-              }}
-            />
-          </div>
-        ))}
+      <div>
+        <div className={`flex relative ${isHandSpread ? 'grid grid-cols-2 gap-0' : ''}`}>
+          {playerHand.map((card, cardIndex) => (
+            <div key={cardIndex} onClick={() => onCardClick(cardIndex)}>
+              <CardRoad
+                card={card}
+                isFaceUp={isHandSpread}
+                style={{
+                  position: isHandSpread ? 'relative' : 'absolute',
+                  top: isHandSpread ? 'auto' : `${cardIndex * 0.5}px`,
+                  left: isHandSpread ? 'auto' : `${cardIndex * 0.5}px`,
+                  zIndex: isHandSpread ? 0 : cardIndex,
+                }}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
