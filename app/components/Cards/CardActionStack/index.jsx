@@ -15,7 +15,6 @@ const shuffleArray = (array) => {
 };
 
 
-
 const CardActionStack = () => {
   const [deck, setDeck] = useState([]);
 
@@ -46,13 +45,13 @@ const CardActionStack = () => {
 
   return (
     <div>
-      <div className="ml-20">
-        <Button onClick={drawCard}>Tirer une carte</Button>
-      </div>
       <div className="relative">
         {Array.isArray(deck) && deck.map((card, index) => (
           <CardAction key={index} card={card} style={{ position: 'absolute', top: `${index * 0.5}px`, left: `${index * 0.5}px`, zIndex: deck.length - index }} />
         ))}
+      </div>
+      <div className="ml-20 mt-[25rem]">
+        <Button onClick={drawCard}>Tirer une carte</Button>
       </div>
     </div>
   );

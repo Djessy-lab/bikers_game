@@ -24,7 +24,7 @@ const EndGame = () => {
       <div className='flex justify-center mt-4'>
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant='secondary' className='w-[22rem]'>
+            <Button variant='secondary' >
               Quitter le jeu
             </Button>
           </AlertDialogTrigger>

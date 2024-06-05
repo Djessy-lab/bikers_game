@@ -120,14 +120,14 @@ const GameStart = () => {
               <Image
                 src={animalImages[playerAnimals[index]]}
                 alt={playerAnimals[index]}
-                width={70}
-                height={70}
-                className="ml-2 rotate-90"
+                width={40}
+                height={40}
+                className="ml-2"
               />
             )}
           </div>
         ))}
-        <Button size="lg" className="bg-3 hover:bg-5" onClick={handleStartGame}>Commencer la partie</Button>
+        <Button size="lg" className="bg-5 hover:bg-3 dark:bg-3 dark:hover:bg-5" onClick={handleStartGame}>Commencer la partie</Button>
       </div>
     </div>
   )

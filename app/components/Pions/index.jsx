@@ -11,7 +11,7 @@ const animalImages = {
   sanglier: "/img/pions/pionSanglier.png",
 }
 
-const Pions = () => {
+const Pion = () => {
   const searchParams = useSearchParams()
   const animals = searchParams.get('animals')
   const names = searchParams.get('names')
@@ -22,19 +22,19 @@ const Pions = () => {
   return (
     <div className="flex">
       {pieces.map((piece, index) => (
-        <div key={index} className="flex flex-col items-center m-4">
-          <Image src={animalImages[piece]} className='rotate-90' alt={`Pièce de ${piece}`} width={100} height={100} priority />
-          <p className="mt-10 text-2xl font-bRiver text-center">{playerNames[index]}</p>
+        <div key={index} className="flex flex-col items-center justify-center m-4">
+          <Image src={animalImages[piece]} alt={`Pièce de ${piece}`} width={50} height={50} priority />
+          <p className="text-2xl font-bRiver text-center">{playerNames[index]}</p>
         </div>
       ))}
     </div>
   )
 }
 
-const PionsWithSuspense = () => (
+const Pions = () => (
   <Suspense fallback={<div>Loading...</div>}>
-    <Pions />
+    <Pion />
   </Suspense>
 )
 
-export default PionsWithSuspense
+export default Pions

@@ -32,7 +32,7 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         {children}
         <Toaster />
-        <Button onClick={toggleDarkMode} variant="ghost" className="fixed top-4 right-4">
+        <Button onClick={toggleDarkMode} variant="ghost" className="fixed top-4 right-4 z-50">
           {darkMode ? <MoonIcon /> : <SunIcon />}
         </Button>
       </body>

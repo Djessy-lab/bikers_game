@@ -37,8 +37,8 @@ const Pieces = () => {
           <Image
             src={piece.src}
             alt="Pièce de moto"
-            width={100}
-            height={100}
+            width={50}
+            height={50}
             priority
           />
         </div>

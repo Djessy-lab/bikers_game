@@ -1,15 +1,17 @@
 import React, { useState, useEffect, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import CardRoad from "../Cards/CardRoad";
 import HandPlayer from "../Cards/HandPlayer";
 import roadBoard from '../../datas/roadBoard';
 import { Button } from '@/components/ui/button';
 import Dice from '../Dice';
 import CardActionStack from '../Cards/CardActionStack';
-import PionsWithSuspense from '../Pions';
 import Pieces from '../Pieces';
 import { toast } from '@/components/ui/use-toast';
 import EndGame from '../EndGame';
+import Pions from '../Pions';
+import PionBoard from '../PionBoard';
+import WinGame from '../WinGame';
 
 
 const shuffleArray = (array) => {
@@ -30,7 +32,7 @@ const getCardCount = (players) => {
 };
 
 const initializeBoard = (playerHelp) => {
-  const animalImages = {
+  const helpImages = {
     lapine: "/img/plateau/aideLapine.png",
     nounours: "/img/plateau/aideNounours.png",
     louve: "/img/plateau/aideLouve.png",
@@ -42,7 +44,7 @@ const initializeBoard = (playerHelp) => {
   board[24] = { id: 'arrivee', name: 'arrivée', image: '/img/plateau/arrivée.png' };
 
   playerHelp.forEach((help, index) => {
-    const aideCard = { id: `aide${help}`, name: `aide${help}`, image: animalImages[help] };
+    const aideCard = { id: `aide${help}`, name: `aide${help}`, image: helpImages[help] };
     let randomIndex;
     do {
       randomIndex = Math.floor(Math.random() * 23) + 1;
@@ -63,6 +65,8 @@ const GameBoard = () => {
   const [playerHands, setPlayerHands] = useState([]);
   const [board, setBoard] = useState(initializeBoard(playerPions));
   const [currentPlayer, setCurrentPlayer] = useState(0);
+  const [pionPositions, setPionPositions] = useState(Array(players).fill(0));
+  const [isWinGameOpen, setIsWinGameOpen] = useState(false);
 
   useEffect(() => {
     const cardCount = getCardCount(players);
@@ -105,17 +109,33 @@ const GameBoard = () => {
     endTurn();
   };
 
+  const movePion = (steps) => {
+    setPionPositions((prevPositions) => {
+      const newPositions = [...prevPositions];
+      newPositions[currentPlayer] = Math.min(newPositions[currentPlayer] + steps, board.length - 1);
+      return newPositions;
+    });
+    endTurn();
+  };
+  useEffect(() => {
+    if (pionPositions.every(position => position === board.length - 1)) {
+      setIsWinGameOpen(true); 
+    }
+  }, [pionPositions, board.length]);
+
   const endTurn = () => {
     setCurrentPlayer((prevPlayer) => (prevPlayer + 1) % players);
   };
 
-
+  const allPlayersAtEnd = pionPositions.every(position => position === board.length - 1);
 
   return (
-    <div className='flex flex-col '>
-      <PionsWithSuspense />
-      <Pieces />
-      <div className="mt-10 flex max-lg:block">
+    <div className='flex flex-col'>
+      {allPlayersAtEnd && <WinGame isOpen={isWinGameOpen} onClose={() => setIsWinGameOpen(false)} />}
+      <div className='fixed top-0 right-20 z-50'>
+        <EndGame />
+      </div>
+      <div className="mt-4 flex max-lg:block">
         <div className="ml-10">
           <h1 className='text-2xl font-bRiver'>Au tour de : {playerNames[currentPlayer]} - {playerPions[currentPlayer]}</h1>
           {playerHands[currentPlayer] && (
@@ -125,8 +145,9 @@ const GameBoard = () => {
                 isHandSpread={true}
                 onCardClick={(cardIndex) => placeCardOnBoard(cardIndex)}
               />
-              <div className="flex justify-center">
+              <div className="flex flex-col">
                 <Button className="mt-10 w-[200px]" onClick={drawCard}>Tirer une carte</Button>
+                <Button className="mt-10 w-[200px]" onClick={() => movePion(1)}>Avancer d&apos;une case</Button>
               </div>
             </>
           )}
@@ -134,18 +155,34 @@ const GameBoard = () => {
         <div className="mx-auto w-[50%] max-lg:w-full lg:ml-12">
           <div className="plateau grid grid-cols-5 gap-0">
             {board.map((card, index) => (
-              <CardRoad key={index} card={card} isFaceUp={card.id !== 'fake'} />
+              <div key={index} className="relative">
+                <CardRoad card={card} isFaceUp={card.id !== 'fake'} />
+                {pionPositions.map((position, pionIndex) => (
+                  position === index && (
+                    <div
+                      key={pionIndex}
+                      className="absolute top-0 left-0"
+                      style={{ transform: `translate(${pionIndex * 80}px, ${pionIndex * 10}px)` }}
+                    >
+                      <PionBoard pion={playerPions[pionIndex]} />
+                    </div>
+                  )
+                ))}
+              </div>
             ))}
           </div>
         </div>
-        <div className='w-[25%] flex flex-col'>
+        <div className='w-[25%] flex flex-col lg:ml-10'>
           <CardActionStack />
-          <div className='mt-96'>
+          <div className='flex justify-around'>
             <Dice />
+            <Pions />
+          </div>
+          <div className='w-full'>
+            <Pieces />
           </div>
         </div>
       </div>
-      <EndGame />
     </div>
   );
 };
