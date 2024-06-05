@@ -202,6 +202,21 @@ const cards = [
     answers: [{ label: "... pour le ou la faire rire", value: false }, { label: "... quand tu es fâché(e)", value: false }, { label: "... à répétition", value: true }],
     chrono: 30
   },
+  {
+    category: "Bloqué",
+    description: 'Passes ton tour à un autre biker !',
+    imgPath: "/img/plateau/bloque.png"
+  },
+  {
+    category: "Bloqué",
+    description: 'Passes ton tour à un autre biker !',
+    imgPath: "/img/plateau/bloque2.png"
+  },
+  {
+    category: "Bloqué",
+    description: 'Passes ton tour à un autre biker !',
+    imgPath: "/img/plateau/bloque3.png"
+  },
 ]
 
 export default cards;

@@ -11,8 +11,8 @@ const CardAction = ({ card, style }) => {
 
   return (
     <div className='flex justify-center items-center mt-10' style={style}>
-      <div className="relative w-72 h-[21rem] perspective-1000" onClick={handleCardClick}>
-        <div className={`absolute w-full h-full rounded-sm shadow-md transform-style-preserve-3d transition-transform duration-1000 ${isFlipped ? 'rotate-y-180' : ''}`}>
+      <div className={`relative w-72 h-[21rem] max-lg:w-48 max-lg:h-[14rem] perspective-1000 ${isFlipped ? 'max-lg:w-[22rem] max-lg:h-[22rem]' : ''}`} onClick={handleCardClick} style={{ transition: 'width 1s, height 1s' }}>
+        <div className={`absolute w-full h-full rounded-sm shadow-md transform-style-preserve-3d transition-transform duration-1000 ${isFlipped ? 'rotate-y-180' : ''}`} >
           <div className={`absolute w-full h-full bg-4 text-white flex justify-center items-center rounded-sm shadow-sm backface-hidden`}>
             <div className="flex flex-col items-center">
               <p className='text-4xl text-1 font-bRiver'>Carte Action</p>
@@ -22,7 +22,7 @@ const CardAction = ({ card, style }) => {
           <div className={`absolute w-full h-full rounded-sm shadow-md backface-hidden rotate-y-180`}>
             <Card className="w-full h-full overflow-hidden">
               <CardHeader>
-                <CardTitle>{card.category}</CardTitle>
+                <CardTitle><h3 className='text-2xl text-center'>{card.category}</h3></CardTitle>
                 {card.description && <CardDescription>{card.description}</CardDescription>}
               </CardHeader>
               <CardContent className="text-sm">
@@ -35,6 +35,7 @@ const CardAction = ({ card, style }) => {
                     ))}
                   </ol>
                 )}
+                {card.imgPath && <Image src={card.imgPath} alt="Card Image Bloqué" width={200} height={200} className="mx-auto" />}
               </CardContent>
               <CardFooter>
                 {card.chrono && <p className='font-bold'>Chrono: {card.chrono} secondes</p>}

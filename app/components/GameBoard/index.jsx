@@ -6,6 +6,8 @@ import roadBoard from '../../datas/roadBoard';
 import { Button } from '@/components/ui/button';
 import Dice from '../Dice';
 import CardActionStack from '../Cards/CardActionStack';
+import PionsWithSuspense from '../Pions';
+import Pieces from '../Pieces';
 
 const shuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
@@ -103,27 +105,32 @@ const GameBoard = () => {
 
   const router = useRouter();
 
+  const handleQuitGame = () => {
+    if (confirm("Êtes-vous sûr de vouloir quitter le jeu ?")) {
+      router.push("/");
+    }
+  };
+
   return (
-    <div className='mb-10'>
-      <Button onClick={() => router.push("/")}>
-        Quitter le jeu
-      </Button>
+    <div className='flex flex-col '>
+      <PionsWithSuspense />
+      <Pieces />
       <div className="mt-10 flex max-lg:block">
-      <div className="ml-10">
-        <h1 className='text-2xl font-bRiver'>Au tour de : {playerNames[currentPlayer]} - {playerPions[currentPlayer]}</h1>
-        {playerHands[currentPlayer] && (
-          <>
-            <HandPlayer
-              playerHand={playerHands[currentPlayer]}
-              isHandSpread={true}
-              onCardClick={(cardIndex) => placeCardOnBoard(cardIndex)}
-            />
-            <div className="flex justify-center">
-              <Button className="mt-10 w-[200px]" onClick={drawCard}>Tirer une carte</Button>
-            </div>
-          </>
-        )}
-      </div>
+        <div className="ml-10">
+          <h1 className='text-2xl font-bRiver'>Au tour de : {playerNames[currentPlayer]} - {playerPions[currentPlayer]}</h1>
+          {playerHands[currentPlayer] && (
+            <>
+              <HandPlayer
+                playerHand={playerHands[currentPlayer]}
+                isHandSpread={true}
+                onCardClick={(cardIndex) => placeCardOnBoard(cardIndex)}
+              />
+              <div className="flex justify-center">
+                <Button className="mt-10 w-[200px]" onClick={drawCard}>Tirer une carte</Button>
+              </div>
+            </>
+          )}
+        </div>
         <div className="mx-auto w-[50%] max-lg:w-full lg:ml-12">
           <div className="plateau grid grid-cols-5 gap-0">
             {board.map((card, index) => (
@@ -137,6 +144,11 @@ const GameBoard = () => {
             <Dice />
           </div>
         </div>
+      </div>
+      <div className='flex justify-center mt-4'>
+        <Button variant='secondary' onClick={handleQuitGame} className='w-[22rem]'>
+          Quitter le jeu
+        </Button>
       </div>
     </div>
   );
