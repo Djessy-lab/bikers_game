@@ -8,6 +8,9 @@ import Dice from '../Dice';
 import CardActionStack from '../Cards/CardActionStack';
 import PionsWithSuspense from '../Pions';
 import Pieces from '../Pieces';
+import { toast } from '@/components/ui/use-toast';
+import EndGame from '../EndGame';
+
 
 const shuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
@@ -82,7 +85,10 @@ const GameBoard = () => {
       setPlayerHands(newPlayerHands);
       endTurn();
     } else {
-      alert("Toutes les cartes ont été tirées !");
+      toast({
+        title: "Toutes les cartes ont été tirées !",
+        description: "Il va falloir faire avec ce qu'il y a sur la table !",
+      });
     }
   };
 
@@ -103,13 +109,7 @@ const GameBoard = () => {
     setCurrentPlayer((prevPlayer) => (prevPlayer + 1) % players);
   };
 
-  const router = useRouter();
 
-  const handleQuitGame = () => {
-    if (confirm("Êtes-vous sûr de vouloir quitter le jeu ?")) {
-      router.push("/");
-    }
-  };
 
   return (
     <div className='flex flex-col '>
@@ -145,11 +145,7 @@ const GameBoard = () => {
           </div>
         </div>
       </div>
-      <div className='flex justify-center mt-4'>
-        <Button variant='secondary' onClick={handleQuitGame} className='w-[22rem]'>
-          Quitter le jeu
-        </Button>
-      </div>
+      <EndGame />
     </div>
   );
 };

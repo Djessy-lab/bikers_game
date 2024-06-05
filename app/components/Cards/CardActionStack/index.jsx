@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import cards from '../../../datas/cards';
 import CardAction from '../CardAction';
 import { Button } from '@/components/ui/button';
+import { toast } from '@/components/ui/use-toast';
 
 const shuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
@@ -36,7 +37,10 @@ const CardActionStack = () => {
       setDeck(newDeck);
       setCurrentCard(newDeck[0]);
     } else {
-      alert("Toutes les cartes ont été tirées !");
+      toast({
+        title: "Toutes les cartes ont été tirées !",
+        description: "C'est le moment de se serrer les coudes !",
+      });
     }
   };
 

@@ -36,10 +36,10 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: 177, 95%, 7%;
     --foreground: 210 40% 98%;
 
-    --card: 222.2 84% 4.9%;
+    --card: 177, 95%, 7%;
     --card-foreground: 210 40% 98%;
 
     --popover: 222.2 84% 4.9%;
@@ -125,7 +125,7 @@
   box-sizing: border-box;
 }
 
-.front  { transform: translateZ(3rem); } 
+.front  { transform: translateZ(3rem); }
 .back   { transform: rotateY(180deg) translateZ(3rem); }
 .left   { transform: rotateY(-90deg) translateZ(3rem); }
 .right  { transform: rotateY(90deg) translateZ(3rem); }

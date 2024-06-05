@@ -35,7 +35,7 @@ const CardAction = ({ card, style }) => {
                     ))}
                   </ol>
                 )}
-                {card.imgPath && <Image src={card.imgPath} alt="Card Image Bloqué" width={200} height={200} className="mx-auto" />}
+                {card.imgPath && <Image src={card.imgPath} alt="Card Image Bloqué" width={200} height={200} className="mx-auto" priority />}
               </CardContent>
               <CardFooter>
                 {card.chrono && <p className='font-bold'>Chrono: {card.chrono} secondes</p>}
