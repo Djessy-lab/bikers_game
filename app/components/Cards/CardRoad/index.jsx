@@ -1,10 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { useDice } from '../../DiceContext/index';
 
-const CardRoad = ({ card, style, isFaceUp }) => {
+const CardRoad = ({ card, style, isFaceUp, isOnBoard, rotationCount, setRotationCount, canRemoveCard, onRemoveCard, pionPositions, cardIndex, onActionComplete }) => {
+  const [rotation, setRotation] = useState(0);
+  const { diceValue } = useDice();
+
+  useEffect(() => {
+    if (card.id === 'fake') {
+      setRotation(0);
+    }
+  }, [card]);
+
+  const rotateCardRight = () => {
+    if (rotationCount > 0) {
+      setRotation((prevRotation) => (prevRotation + 90) % 360);
+      setRotationCount((prevCount) => prevCount - 1);
+      if(rotationCount -1 === 0) {
+        onActionComplete();
+      }
+    }
+  };
+
+  const rotateCardLeft = () => {
+    if (rotationCount > 0) {
+      setRotation((prevRotation) => (prevRotation - 90 + 360) % 360);
+      setRotationCount((prevCount) => prevCount - 1);
+      if(rotationCount -1 === 0) {
+        onActionComplete();
+      }
+    }
+  };
+
+  const handleCardClick = () => {
+    const isPionOnCard = pionPositions && pionPositions.includes(cardIndex);
+    if (canRemoveCard && card.id !== 'fake' && card.name !== 'depart' && card.name !== 'arrivée' && card.name !== 'aide' && !isPionOnCard) {
+      onRemoveCard();
+      onActionComplete();
+    } else if (isOnBoard && card.id !== 'fake' && card.name !== 'depart' && card.name !== 'arrivée' && card.name !== 'aide' && rotationCount > 0) {
+      if (diceValue === 2) {
+        rotateCardRight();
+      } else if (diceValue === 6) {
+        rotateCardLeft();
+      }
+    }
+  };
+
   return (
     <div className='flex justify-center items-center mt-2' style={style}>
-      <div className="relative w-32 h-32 max-lg:w-24 max-lg:h-20 perspective-1000">
+      <div className="relative w-32 h-32 max-lg:w-24 max-lg:h-20 perspective-1000 cursor-pointer" onClick={handleCardClick} style={{ transform: `rotate(${rotation}deg)` }}>
         <div className={`absolute w-full h-full rounded-sm shadow-md transform-style-preserve-3d transition-transform duration-1000 ${isFaceUp ? '' : 'rotate-y-180'}`}>
           <div className="absolute w-full h-full rounded-sm shadow-md backface-hidden">
             <Image src={card.image} className='rounded-sm shadow-md' alt={card.name} width={200} height={200} priority />

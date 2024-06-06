@@ -13,7 +13,6 @@ import Pions from '../Pions';
 import PionBoard from '../PionBoard';
 import WinGame from '../WinGame';
 
-
 const shuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -44,7 +43,7 @@ const initializeBoard = (playerHelp) => {
   board[24] = { id: 'arrivee', name: 'arrivée', image: '/img/plateau/arrivée.png' };
 
   playerHelp.forEach((help, index) => {
-    const aideCard = { id: `aide${help}`, name: `aide${help}`, image: helpImages[help] };
+    const aideCard = { id: `aide`, name: `aide`, image: helpImages[help] };
     let randomIndex;
     do {
       randomIndex = Math.floor(Math.random() * 23) + 1;
@@ -68,6 +67,8 @@ const GameBoard = () => {
   const [pionPositions, setPionPositions] = useState(Array(players).fill(0));
   const [isWinGameOpen, setIsWinGameOpen] = useState(false);
   const [chrono, setChrono] = useState(null);
+  const [rotationCount, setRotationCount] = useState(0);
+  const [canRemoveCard, setCanRemoveCard] = useState(false);
 
   useEffect(() => {
     const cardCount = getCardCount(players);
@@ -127,6 +128,13 @@ const GameBoard = () => {
     endTurn();
   };
 
+  const removeCardFromBoard = (cardIndex) => {
+    const newBoard = [...board];
+    newBoard[cardIndex] = { id: 'fake', name: 'Fake Card', image: '/img/bikers.png' };
+    setBoard(newBoard);
+    setCanRemoveCard(false);
+  };
+
   useEffect(() => {
     if (pionPositions.every(position => position === board.length - 1)) {
       setIsWinGameOpen(true);
@@ -135,6 +143,48 @@ const GameBoard = () => {
 
   const endTurn = () => {
     setCurrentPlayer((prevPlayer) => (prevPlayer + 1) % players);
+    setRotationCount(0);
+    setCanRemoveCard(false);
+  };
+
+  const handleRoll = (diceValue) => {
+    if (diceValue === 2 || diceValue === 6) {
+      setRotationCount(2);
+    } else if (diceValue === 1) {
+      setCanRemoveCard(true);
+    } else if (diceValue === 3) {
+      setTimeout(() => {
+        distributeCardsToAllPlayers();
+      }, 1000);
+    } else {
+      setRotationCount(0);
+      setCanRemoveCard(false);
+      setTimeout(() => {
+        endTurn();
+      }, 1000);
+    }
+  };
+
+  const distributeCardsToAllPlayers = () => {
+    setPlayerHands((prevHands) => {
+      const newHands = prevHands.map((hand) => {
+        if (deck.length > 0) {
+          const newDeck = [...deck];
+          const newCard = newDeck.shift();
+          setDeck(newDeck);
+          return [...hand, newCard];
+        }
+        return hand;
+      });
+      return newHands;
+    });
+    endTurn();
+  };
+
+  const handleCardActionComplete = () => {
+    setTimeout(() => {
+      endTurn();
+    }, 1000);
   };
 
   const allPlayersAtEnd = pionPositions.every(position => position === board.length - 1);
@@ -169,7 +219,18 @@ const GameBoard = () => {
           <div className="plateau grid grid-cols-5 gap-0">
             {board.map((card, index) => (
               <div key={index} className="relative">
-                <CardRoad card={card} isFaceUp={card.id !== 'fake'} />
+                <CardRoad
+                  card={card}
+                  isFaceUp={card.id !== 'fake'}
+                  isOnBoard={true}
+                  rotationCount={rotationCount}
+                  setRotationCount={setRotationCount}
+                  canRemoveCard={canRemoveCard}
+                  onRemoveCard={() => removeCardFromBoard(index)}
+                  pionPositions={pionPositions}
+                  cardIndex={index}
+                  onActionComplete={handleCardActionComplete}
+                />
                 {pionPositions.map((position, pionIndex) => (
                   position === index && (
                     <div
@@ -192,7 +253,7 @@ const GameBoard = () => {
         <div className='w-[25%] flex flex-col lg:ml-10'>
           <CardActionStack />
           <div className='flex justify-around'>
-            <Dice />
+            <Dice onRoll={handleRoll} />
             <Pions />
           </div>
           <div className='w-full'>

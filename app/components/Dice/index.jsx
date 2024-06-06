@@ -2,14 +2,16 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { useDice } from '../DiceContext/index';
 
 const basePath = '/img/dice/'
 
-const Dice = () => {
+const Dice = ({ onRoll }) => {
   const faces = ["1.png", "2.png", "3.png", "4.png", "5.png", "6.png"];
   const [currentFace, setCurrentFace] = useState(0);
   const [rolling, setRolling] = useState(false);
   const [spinDirection, setSpinDirection] = useState('');
+  const { setDiceValue } = useDice();
 
   const rollDice = () => {
     setRolling(true);
@@ -17,7 +19,9 @@ const Dice = () => {
     setTimeout(() => {
       const newFace = Math.floor(Math.random() * 6);
       setCurrentFace(newFace);
+      setDiceValue(newFace + 1);
       setRolling(false);
+      onRoll(newFace + 1);
     }, 1000);
   };
 

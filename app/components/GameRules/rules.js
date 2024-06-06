@@ -7,9 +7,9 @@ const rules = [
     title: "Comment jouer ?",
     description: "À chaque tour, vous avez trois choix :",
     steps: [
-      "a) Avancer de 1 ou 2 cases maximum avec votre pion.",
-      "b) Retourner une carte action face cachée et effectuer l'action de cette carte.",
-      "c) Lancer le dé pour voir ce qu'il nous réserve."
+      "Avancer de 1 ou 2 cases maximum avec votre pion.",
+      "Retourner une carte action face cachée et effectuer l'action de cette carte.",
+      "Lancer le dé pour voir ce qu'il nous réserve."
     ]
   },
   {
