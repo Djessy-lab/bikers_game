@@ -97,6 +97,22 @@ const GameBoard = () => {
     }
   };
 
+  const movePawn = (steps) => {
+    if (canMove) {
+      setPionPositions((prevPositions) => {
+        const newPositions = [...prevPositions];
+        newPositions[currentPlayer] = Math.min(newPositions[currentPlayer] + steps, board.length - 1);
+        return newPositions;
+      });
+      endTurn();
+    } else {
+      toast({
+        title: "Vous ne pouvez pas avancer !",
+        description: "Vous devez jouer des cartes routes pour avancer",
+      });
+    }
+  };
+
   const placeCardOnBoard = (cardIndex) => {
     const newPlayerHands = [...playerHands];
     const card = newPlayerHands[currentPlayer].splice(cardIndex, 1)[0];
@@ -109,23 +125,8 @@ const GameBoard = () => {
     setBoard(newBoard);
     setChrono(card.chrono || null);
     endTurn();
-
-    const movePion = (steps) => {
-      if (canMove) {
-        setPionPositions((prevPositions) => {
-          const newPositions = [...prevPositions];
-          newPositions[currentPlayer] = Math.min(newPositions[currentPlayer] + steps, board.length - 1);
-          return newPositions;
-        });
-        endTurn();
-      } else {
-        toast({
-          title: "Vous ne pouvez pas avancer !",
-          description: "Vous devez jouer des cartes routes pour avancer",
-        });
-      }
-    }
   };
+
   useEffect(() => {
     if (pionPositions.every(position => position === board.length - 1)) {
       setIsWinGameOpen(true);
@@ -159,7 +160,7 @@ const GameBoard = () => {
               />
               <div className="flex flex-col">
                 <Button className="mt-10 w-[200px]" onClick={drawCard}>Tirer une carte</Button>
-                <Button className="mt-4 w-[200px]" variant={canMove ? "default" : "secondary"} onClick={() => movePion(1)}>Avancer d&apos;une case</Button>
+                <Button className="mt-4 w-[200px]" variant={canMove ? "default" : "secondary"} onClick={() => movePawn(1)}>Avancer d&apos;une case</Button>
               </div>
             </>
           )}
