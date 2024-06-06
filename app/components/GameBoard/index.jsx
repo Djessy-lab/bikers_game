@@ -12,6 +12,7 @@ import EndGame from '../EndGame';
 import Pions from '../Pions';
 import PionBoard from '../PionBoard';
 import WinGame from '../WinGame';
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp } from 'lucide-react';
 
 const shuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
@@ -98,14 +99,31 @@ const GameBoard = () => {
     }
   };
 
-  const movePawn = (steps) => {
+  const movePawn = (direction) => {
+    const directions = {
+      up: -5,
+      right: 1,
+      down: 5,
+      left: -1,
+    };
+
     if (canMove) {
       setPionPositions((prevPositions) => {
         const newPositions = [...prevPositions];
-        newPositions[currentPlayer] = Math.min(newPositions[currentPlayer] + steps, board.length - 1);
+        const newPosition = newPositions[currentPlayer] + directions[direction];
+
+        if (newPosition >= 0 && newPosition < board.length && board[newPosition].id !== 'fake') {
+          newPositions[currentPlayer] = newPosition;
+          endTurn();
+        } else {
+          toast({
+            title: "Déplacement impossible !",
+            description: "Vous ne pouvez pas vous déplacer dans cette direction.",
+          });
+        }
+
         return newPositions;
       });
-      endTurn();
     } else {
       toast({
         title: "Vous ne pouvez pas avancer !",
@@ -210,7 +228,12 @@ const GameBoard = () => {
               />
               <div className="flex flex-col">
                 <Button className="mt-10 w-[200px]" onClick={drawCard}>Tirer une carte</Button>
-                <Button className="mt-4 w-[200px]" variant={canMove ? "default" : "secondary"} onClick={() => movePawn(1)}>Avancer d&apos;une case</Button>
+                <div className="mt-4 flex items-center">
+                  <Button className="w-[3rem]" variant={canMove ? "default" : "secondary"} onClick={() => movePawn('up')}><ArrowUp /></Button>
+                  <Button className="w-[3rem]" variant={canMove ? "default" : "secondary"} onClick={() => movePawn('down')}><ArrowDown /></Button>
+                  <Button className="w-[3rem]" variant={canMove ? "default" : "secondary"} onClick={() => movePawn('left')}><ArrowLeft /></Button>
+                  <Button className="w-[3rem]" variant={canMove ? "default" : "secondary"} onClick={() => movePawn('right')}><ArrowRight /></Button>
+                </div>
               </div>
             </>
           )}
