@@ -67,6 +67,7 @@ const GameBoard = () => {
   const [currentPlayer, setCurrentPlayer] = useState(0);
   const [pionPositions, setPionPositions] = useState(Array(players).fill(0));
   const [isWinGameOpen, setIsWinGameOpen] = useState(false);
+  const [chrono, setChrono] = useState(null);
 
   useEffect(() => {
     const cardCount = getCardCount(players);
@@ -106,20 +107,28 @@ const GameBoard = () => {
     }
     setPlayerHands(newPlayerHands);
     setBoard(newBoard);
+    setChrono(card.chrono || null);
     endTurn();
-  };
 
-  const movePion = (steps) => {
-    setPionPositions((prevPositions) => {
-      const newPositions = [...prevPositions];
-      newPositions[currentPlayer] = Math.min(newPositions[currentPlayer] + steps, board.length - 1);
-      return newPositions;
-    });
-    endTurn();
+    const movePion = (steps) => {
+      if (canMove) {
+        setPionPositions((prevPositions) => {
+          const newPositions = [...prevPositions];
+          newPositions[currentPlayer] = Math.min(newPositions[currentPlayer] + steps, board.length - 1);
+          return newPositions;
+        });
+        endTurn();
+      } else {
+        toast({
+          title: "Vous ne pouvez pas avancer !",
+          description: "Vous devez jouer des cartes routes pour avancer",
+        });
+      }
+    }
   };
   useEffect(() => {
     if (pionPositions.every(position => position === board.length - 1)) {
-      setIsWinGameOpen(true); 
+      setIsWinGameOpen(true);
     }
   }, [pionPositions, board.length]);
 
@@ -128,6 +137,9 @@ const GameBoard = () => {
   };
 
   const allPlayersAtEnd = pionPositions.every(position => position === board.length - 1);
+  const currentPionPosition = pionPositions[currentPlayer];
+  const nextPionPosition = currentPionPosition + 1;
+  const canMove = nextPionPosition < board.length && board[nextPionPosition].id !== 'fake';
 
   return (
     <div className='flex flex-col'>
@@ -147,7 +159,7 @@ const GameBoard = () => {
               />
               <div className="flex flex-col">
                 <Button className="mt-10 w-[200px]" onClick={drawCard}>Tirer une carte</Button>
-                <Button className="mt-10 w-[200px]" onClick={() => movePion(1)}>Avancer d&apos;une case</Button>
+                <Button className="mt-4 w-[200px]" variant={canMove ? "default" : "secondary"} onClick={() => movePion(1)}>Avancer d&apos;une case</Button>
               </div>
             </>
           )}
@@ -161,8 +173,12 @@ const GameBoard = () => {
                   position === index && (
                     <div
                       key={pionIndex}
-                      className="absolute top-0 left-0"
-                      style={{ transform: `translate(${pionIndex * 80}px, ${pionIndex * 10}px)` }}
+                      className="absolute z-50"
+                      style={{
+                        top: pionIndex % 2 === 0 ? '0' : '50%',
+                        left: pionIndex < 2 ? '0' : '50%',
+                        transform: 'translate(30%, -15%)'
+                      }}
                     >
                       <PionBoard pion={playerPions[pionIndex]} />
                     </div>

@@ -12,14 +12,25 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({ children }) {
   const [darkMode, setDarkMode] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
+    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+    setDarkMode(savedDarkMode);
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      if (darkMode) {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('darkMode', 'true');
+      } else {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('darkMode', 'false');
+      }
     }
-  }, [darkMode]);
+  }, [darkMode, mounted]);
 
   const toggleDarkMode = () => setDarkMode(!darkMode);
 
@@ -29,11 +40,11 @@ export default function RootLayout({ children }) {
         <title>{metadata.title}</title>
         <meta name="description" content={metadata.description} />
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.className} ${mounted && darkMode ? 'dark' : ''} bg-2 dark:bg-background`}>
         {children}
-        <Toaster />
-        <Button onClick={toggleDarkMode} variant="ghost" className="fixed top-4 right-4 z-50">
-          {darkMode ? <MoonIcon /> : <SunIcon />}
+        <Toaster className="text-sm text-gray-700 dark:text-gray-300" />
+        <Button onClick={toggleDarkMode} variant="ghost" className="fixed top-4 right-4 z-50 p-2 rounded-full">
+          {darkMode ? <MoonIcon className="text-yellow-500" /> : <SunIcon className="text-blue-500" />}
         </Button>
       </body>
     </html>

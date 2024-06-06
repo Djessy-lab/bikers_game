@@ -1,13 +1,48 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { default as Image } from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Chrono from "../../Chrono/index";
+import { Button } from "@/components/ui/button";
 
-const CardAction = ({ card, style }) => {
+const CardAction = ({ card, style, isTopCard }) => {
   const [isFlipped, setIsFlipped] = useState(false);
+  const [chronoStarted, setChronoStarted] = useState(false);
+  const [chronoReset, setChronoReset] = useState(false);
+  const [buttonText, setButtonText] = useState("Démarrer Chrono");
 
-  const handleCardClick = () => {
-    setIsFlipped(!isFlipped);
+  const handleCardClick = (e) => {
+    if (e.target.tagName !== 'BUTTON') {
+      setIsFlipped(!isFlipped);
+    }
   };
+
+  const handleChronoClick = (e) => {
+    e.stopPropagation();
+    if (!chronoStarted) {
+      setChronoStarted(true);
+      setChronoReset(false);
+      setButtonText("Arrêter Chrono");
+    } else {
+      setChronoStarted(false);
+      setChronoReset(true);
+      setButtonText("Démarrer Chrono");
+    }
+  };
+
+  useEffect(() => {
+    if (!isTopCard) {
+      setIsFlipped(false);
+      setChronoStarted(false);
+      setChronoReset(true);
+      setButtonText("Démarrer Chrono");
+    }
+  }, [isTopCard]);
+
+  useEffect(() => {
+    setChronoStarted(false);
+    setChronoReset(true);
+    setButtonText("Démarrer Chrono");
+  }, [card]);
 
   return (
     <div className='flex justify-center items-center mt-10' style={style}>
@@ -22,23 +57,28 @@ const CardAction = ({ card, style }) => {
           <div className={`absolute w-full h-full rounded-sm shadow-md backface-hidden rotate-y-180`}>
             <Card className="w-full h-full overflow-hidden">
               <CardHeader>
-                <CardTitle><h3 className='text-2xl text-center'>{card.category}</h3></CardTitle>
+                <CardTitle><h3 className='text-xl text-center'>{card.category}</h3></CardTitle>
                 {card.description && <CardDescription>{card.description}</CardDescription>}
               </CardHeader>
-              <CardContent className="text-sm">
-                {card.question && <p className="font-bold">{card.question}</p>}
-                {card.action && <p>{card.action}</p>}
+              <CardContent >
+                {card.question && <p className="font-bold text-sm">{card.question}</p>}
+                {card.action && <p className="text-sm">{card.action}</p>}
                 {card.answers && (
                   <ol>
                     {card.answers.map((answer, index) => (
-                      <li key={index} className='list-decimal'>{answer.label}</li>
+                      <li key={index} className='list-decimal  text-left'>{answer.label}</li>
                     ))}
                   </ol>
                 )}
                 {card.imgPath && <Image src={card.imgPath} alt="Card Image Bloqué" width={200} height={200} className="mx-auto" priority />}
               </CardContent>
               <CardFooter>
-                {card.chrono && <p className='font-bold'>Chrono: {card.chrono} secondes</p>}
+                {card.chrono && (
+                  <div className='flex flex-col items-center'>
+                    <Button className='mb-2' onClick={handleChronoClick}>{buttonText}: {card.chrono} secondes</Button>
+                    <Chrono chrono={card.chrono} isRunning={chronoStarted} reset={chronoReset} />
+                  </div>
+                )}
               </CardFooter>
             </Card>
           </div>

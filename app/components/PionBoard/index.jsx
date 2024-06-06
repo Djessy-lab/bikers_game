@@ -8,7 +8,7 @@ const PionBoard = ({ pion }) => {
     sanglier: "/img/pions/pionSanglier.png",
   };
 
-  return <Image src={animalImages[pion]} alt={`Pion de ${pion}`} width={50} height={50} />;
+  return <Image src={animalImages[pion]} alt={`Pion de ${pion}`} width={40} height={40} className="z-50 max-lg:w-10 max-lg:h-10" />;
 };
 
 export default PionBoard;
