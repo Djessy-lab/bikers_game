@@ -23,7 +23,7 @@ const Pion = () => {
     <div className="flex">
       {pieces.map((piece, index) => (
         <div key={index} className="flex flex-col items-center justify-center m-4">
-          <Image src={animalImages[piece]} alt={`Pièce de ${piece}`} width={50} height={50} priority />
+          <Image src={animalImages[piece]} alt={`Pièce de ${piece}`} width={50} style={{ width: 'auto', height: 'auto' }}  height={50} priority />
           <p className="text-2xl font-bRiver text-center">{playerNames[index]}</p>
         </div>
       ))}

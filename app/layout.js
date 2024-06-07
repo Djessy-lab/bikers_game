@@ -40,7 +40,7 @@ export default function RootLayout({ children }) {
         <title>{metadata.title}</title>
         <meta name="description" content={metadata.description} />
       </head>
-      <body className={`${inter.className} ${mounted && darkMode ? 'dark' : ''} bg-2 dark:bg-background`}>
+      <body suppressHydrationWarning={true} className={`${inter.className} ${mounted && darkMode ? 'dark' : ''} bg-2 dark:bg-background`}>
         {children}
         <Toaster className="text-sm text-gray-700 dark:text-gray-300" />
         <Button onClick={toggleDarkMode} variant="ghost" className="fixed top-4 right-4 z-50 p-2 rounded-full">

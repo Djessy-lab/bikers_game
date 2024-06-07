@@ -39,6 +39,7 @@ const Pieces = () => {
             alt="Pièce de moto"
             width={50}
             height={50}
+            style={{ width: 'auto', height: 'auto' }} 
             priority
           />
         </div>

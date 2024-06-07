@@ -69,14 +69,14 @@ const CardAction = ({ card, style, isTopCard, discardCard, endTurn }) => {
               <div className={`absolute w-full h-full bg-4 text-white flex justify-center items-center rounded-sm shadow-sm backface-hidden`}>
                 <div className="flex flex-col items-center">
                   <p className='text-4xl text-1 font-bRiver'>Carte Action</p>
-                  <Image src="/img/bikers.png" className='ml-4' alt="Card Back" width={200} height={200} priority />
+                  <Image src="/img/bikers.png" className='ml-4' alt="Card Back" width={200} height={200} style={{ width: 200, height: 200 }}  priority />
                 </div>
               </div>
             </div>
           </div>
         </div>
       </DialogTrigger>
-      <DialogContent className="w-[32rem] h-[42rem] max-lg:w-[80%] max-lg:h-[90%]">
+      <DialogContent className="w-[80%] h-[90%] ">
         <DialogHeader>
           <Button variant='secondary' onClick={handleDiscardCard}>Terminer !</Button>
           <DialogTitle className="text-4xl text-center font-bRiver">{card.category}</DialogTitle>
@@ -84,7 +84,7 @@ const CardAction = ({ card, style, isTopCard, discardCard, endTurn }) => {
         </DialogHeader>
         <div className="w-full h-full overflow-hidden">
           <div className="flex flex-col items-center">
-            <Image src="/img/bikers.png" className='ml-4 mt-10' alt="Card Back" width={300} height={300} priority />
+            <Image src="/img/bikers.png" className='ml-4 mt-10' alt="Card Back" width={300} height={300} style={{ width: 300, height: 300 }}  priority />
           </div>
           <div className="mt-10">
             {card.question && <p className="font-bold text-mg">{card.question}</p>}
@@ -96,7 +96,7 @@ const CardAction = ({ card, style, isTopCard, discardCard, endTurn }) => {
                 ))}
               </ol>
             )}
-            {card.imgPath && <Image src={card.imgPath} alt="Card Image Bloqué" width={150} height={150} className="mx-auto rounded-md" priority />}
+            {card.imgPath && <Image src={card.imgPath} alt="Card Image Bloqué" width={150} height={150} style={{ width: 'auto', height: 'auto' }}  className="mx-auto rounded-md" priority />}
           </div>
           <div className="mt-4">
             {card.chrono && (

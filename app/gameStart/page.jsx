@@ -69,7 +69,7 @@ const GameStart = () => {
     <div className="flex flex-col items-center">
       <div className="bg-3 h-96 flex flex-col justify-center items-center w-screen">
         <Link href="/">
-          <Image src="/img/logo.png" alt="biker" width={200} height={200} />
+          <Image src="/img/logo.png" alt="biker" width={200} height={200} style={{ width: 'auto', height: 'auto' }}  className="max-lg:w-24 max-lg:h-24" priority />
         </Link>
         <h1 className="text-6xl font-bRiver mt-8 text-center">Combien de bikers dans la partie ?</h1>
         <div className="mt-8 w-full max-w-md">
@@ -90,10 +90,10 @@ const GameStart = () => {
         </div>
       </div>
       <div className="absolute left-0 top-[6.6rem] max-lg:top-12 max-lg:left-[-3rem] max-lg:w-24">
-        <Image src="/img/Lapine.png" alt="biker" width={200} height={200} />
+        <Image src="/img/Lapine.png" alt="biker" width={200} height={200} style={{ width: 'auto', height: 'auto' }}  />
       </div>
       <div className="absolute right-0 top-[6.6rem] max-lg:top-14 max-lg:right-2 max-lg:w-24">
-        <Image src="/img/Nounours.png" alt="biker" width={200} height={200} />
+        <Image src="/img/Nounours.png" alt="biker" width={200} height={200} style={{ width: 'auto', height: 'auto' }}  />
       </div>
       <div className="h-96 flex justify-center items-center flex-col w-full">
         <h2 className="text-3xl font-bRiver mb-4 text-center">Tout est bon ?</h2>
@@ -120,9 +120,10 @@ const GameStart = () => {
               <Image
                 src={animalImages[playerAnimals[index]]}
                 alt={playerAnimals[index]}
+                className="ml-2"
                 width={40}
                 height={40}
-                className="ml-2"
+                style={{ width: 'auto', height: 'auto' }}
               />
             )}
           </div>

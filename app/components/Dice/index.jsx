@@ -28,8 +28,6 @@ const Dice = ({ onRoll, size }) => {
       setDiceValue(newFace + 1);
       setRolling(false);
       onRoll(newFace + 1);
-      console.log(newFace + 1);
-      console.log(faces[newFace]);
     }, 1000);
   };
 
@@ -40,12 +38,12 @@ const Dice = ({ onRoll, size }) => {
   return (
     <div className={`flex items-center justify-center h-16 ${perspective}`} onClick={size !== 'small' ? rollDice : null}>
       <div className={`dice ${diceSize} flex items-center justify-center text-4xl bg-white border border-gray-100 rounded-lg transition-transform duration-1000 transform-style-preserve-3d ${rolling ? spinDirection : ''}`}>
-        <Image src={faces[currentFace].src} alt={`Face ${currentFace + 1}`} width={imageSize} height={imageSize} className="face front" />
-        <Image src={faces[1].src} alt="Face 2" width={imageSize} height={imageSize} className="face back" />
-        <Image src={faces[2].src} alt="Face 3" width={imageSize} height={imageSize} className="face left" />
-        <Image src={faces[3].src} alt="Face 4" width={imageSize} height={imageSize} className="face right" />
-        <Image src={faces[4].src} alt="Face 5" width={imageSize} height={imageSize} className="face top" />
-        <Image src={faces[5].src} alt="Face 6" width={imageSize} height={imageSize} className="face bottom" />
+        <Image src={faces[currentFace].src} alt={`Face ${currentFace + 1}`} width={imageSize} height={imageSize} style={{ width: 'auto', height: 'auto' }} priority  className="face front" />
+        <Image src={faces[1].src} alt="Face 2" width={imageSize} height={imageSize} className="face back" style={{ width: 'auto', height: 'auto' }} priority  />
+        <Image src={faces[2].src} alt="Face 3" width={imageSize} height={imageSize} className="face left" style={{ width: 'auto', height: 'auto' }} priority  />
+        <Image src={faces[3].src} alt="Face 4" width={imageSize} height={imageSize} className="face right" style={{ width: 'auto', height: 'auto' }} priority  />
+        <Image src={faces[4].src} alt="Face 5" width={imageSize} height={imageSize} className="face top" style={{ width: 'auto', height: 'auto' }} priority  />
+        <Image src={faces[5].src} alt="Face 6" width={imageSize} height={imageSize} className="face bottom" style={{ width: 'auto', height: 'auto' }} priority  />
       </div>
     </div>
   );

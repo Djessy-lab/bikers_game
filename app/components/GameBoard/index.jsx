@@ -208,7 +208,6 @@ const GameBoard = () => {
   };
 
   const handleRoll = (diceValue) => {
-    console.log(`Dice rolled: ${diceValue}`);
     switch (diceValue) {
       case 1:
         setCanRemoveCard(true);

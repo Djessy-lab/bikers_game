@@ -57,9 +57,20 @@ const CardRoad = ({ card, style, isFaceUp, isOnBoard, rotationCount, setRotation
     }
   };
 
+  const getCursorStyle = () => {
+    if (isOnBoard && card.id !== 'fake' && card.name !== 'depart' && card.name !== 'arrivée' && card.name !== 'aide' && rotationCount > 0) {
+      if (diceValue === 2) {
+        return 'cursor-e-resize';
+      } else if (diceValue === 5) {
+        return 'cursor-w-resize';
+      }
+    }
+    return 'cursor-pointer';
+  };
+
   return (
     <div className='flex justify-center items-center mt-2' style={style}>
-      <div className="relative w-32 h-32 max-lg:w-24 max-lg:h-20 perspective-1000 cursor-pointer" onClick={handleCardClick} style={{ transform: `rotate(${rotation}deg)` }}>
+      <div className={`relative w-32 h-32 max-lg:w-24 max-lg:h-20 perspective-1000 ${getCursorStyle()}`} onClick={handleCardClick} style={{ transform: `rotate(${rotation}deg)` }}>
         <div className={`absolute w-full h-full rounded-sm shadow-md transform-style-preserve-3d transition-transform duration-1000 ${isFaceUp ? '' : 'rotate-y-180'}`}>
           <div className={
             `absolute
@@ -74,13 +85,13 @@ const CardRoad = ({ card, style, isFaceUp, isOnBoard, rotationCount, setRotation
               && card.name !== 'aide'
               ? 'hover:border-[.2rem] hover:border-dashed hover:rounded-lg hover:border-red-500'
               : ''}`}>
-            <div className="w-full h-full ">
-              <Image src={card.image} className='rounded-sm shadow-md max-lg:h-20' alt={card.name} width={200} height={200} priority />
+            <div className="w-full h-full">
+              <Image src={card.image} className='rounded-sm shadow-md max-lg:h-20' alt={card.name} width={200} height={200} style={{ width: 'auto', height: 'auto' }}  priority />
             </div>
           </div>
-          <div className="absolute w-full h-full bg-4 text-white flex flex-col items-center rounded-sm shadow-md backface-hidden rotate-y-180 ">
+          <div className="absolute w-full h-full bg-4 text-white flex flex-col items-center rounded-sm shadow-md backface-hidden rotate-y-180">
             <h2 className="text-2xl max-lg:text-lg max-lg:mt-0 font-bRiver text-1 mt-4">Carte route</h2>
-            <Image src="/img/bikers.png" className='ml-4 max-lg:w-10 max-lg:h-10 ' alt="Card Back" width={70} height={70} priority />
+            <Image src="/img/bikers.png" className='ml-4 max-lg:w-10 max-lg:h-10 ' alt="Card Back" width={70} height={70} style={{ width: 70, height: 70 }}  priority />
           </div>
         </div>
       </div>
