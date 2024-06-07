@@ -61,7 +61,19 @@ const CardRoad = ({ card, style, isFaceUp, isOnBoard, rotationCount, setRotation
     <div className='flex justify-center items-center mt-2' style={style}>
       <div className="relative w-32 h-32 max-lg:w-24 max-lg:h-20 perspective-1000 cursor-pointer" onClick={handleCardClick} style={{ transform: `rotate(${rotation}deg)` }}>
         <div className={`absolute w-full h-full rounded-sm shadow-md transform-style-preserve-3d transition-transform duration-1000 ${isFaceUp ? '' : 'rotate-y-180'}`}>
-          <div className={`absolute w-full h-full rounded-sm shadow-md backface-hidden ${canRemoveCard && card.name !== 'depart' && card.name !== 'arrivée' && card.name !== 'aide' ? 'hover:border-[.2rem] hover:border-dashed hover:rounded-lg hover:border-red-500' : ''}`}>
+          <div className={
+            `absolute
+              w-full
+              h-full
+              rounded-sm
+              shadow-md
+              backface-hidden
+              ${canRemoveCard
+              && card.name !== 'depart'
+              && card.name !== 'arrivée'
+              && card.name !== 'aide'
+              ? 'hover:border-[.2rem] hover:border-dashed hover:rounded-lg hover:border-red-500'
+              : ''}`}>
             <div className="w-full h-full">
               <Image src={card.image} className='rounded-sm shadow-md max-lg:h-20 ' alt={card.name} width={200} height={200} priority />
             </div>
