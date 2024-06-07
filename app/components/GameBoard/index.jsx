@@ -1,9 +1,8 @@
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, Suspense, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import CardRoad from "../Cards/CardRoad";
 import HandPlayer from "../Cards/HandPlayer";
 import roadBoard from '../../datas/roadBoard';
-import { Button } from '@/components/ui/button';
 import Dice from '../Dice';
 import CardActionStack from '../Cards/CardActionStack';
 import Pieces from '../Pieces';
@@ -12,7 +11,7 @@ import EndGame from '../EndGame';
 import Pions from '../Pions';
 import PionBoard from '../PionBoard';
 import WinGame from '../WinGame';
-import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp } from 'lucide-react';
+import PlayerActions from '../PlayerActions';
 
 const shuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
@@ -39,17 +38,21 @@ const initializeBoard = (playerHelp) => {
     sanglier: "/img/plateau/aideSanglier.png",
   };
 
-  const board = Array(25).fill({ id: 'fake', name: 'Fake Card', image: '/img/logo.png' });
-  board[0] = { id: 'depart', name: 'depart', image: '/img/plateau/depart.png' };
-  board[24] = { id: 'arrivee', name: 'arrivée', image: '/img/plateau/arrivée.png' };
+  const board = Array(25).fill({ id: 'fake', name: 'Fake Card', image: '/img/logo.png', access: [false, false, false, false] });
+  board[0] = { id: 'depart', name: 'depart', image: '/img/plateau/depart.png', access: [true, true, true, true] };
+  board[24] = { id: 'arrivee', name: 'arrivée', image: '/img/plateau/arrivée.png', access: [true, true, true, true] };
+
+  const availableIndices = [];
+  for (let i = 1; i < 24; i++) {
+    availableIndices.push(i);
+  }
+
+  const shuffledIndices = shuffleArray(availableIndices);
 
   playerHelp.forEach((help, index) => {
-    const aideCard = { id: `aide`, name: `aide`, image: helpImages[help] };
-    let randomIndex;
-    do {
-      randomIndex = Math.floor(Math.random() * 23) + 1;
-    } while (board[randomIndex].id !== 'fake');
-    board[randomIndex] = aideCard;
+    const aideCard = { id: 'aide', name: 'aide', image: helpImages[help], access: [true, true, true, true] };
+    const cardIndex = shuffledIndices[index];
+    board[cardIndex] = aideCard;
   });
 
   return board;
@@ -59,17 +62,25 @@ const GameBoard = () => {
   const searchParams = useSearchParams();
   const players = parseInt(searchParams.get('players'), 10) || 2;
   const playerNames = searchParams.get('names') ? searchParams.get('names').split(',') : Array(players).fill('Joueur');
-  const playerPions = searchParams.get('animals') ? searchParams.get('animals').split(',') : Array(players).fill('Pion');
+
+  const playerPions = useMemo(() => {
+    return searchParams.get('animals') ? searchParams.get('animals').split(',') : Array(players).fill('Pion');
+  }, [searchParams, players]);
 
   const [deck, setDeck] = useState([]);
   const [playerHands, setPlayerHands] = useState([]);
-  const [board, setBoard] = useState(initializeBoard(playerPions));
   const [currentPlayer, setCurrentPlayer] = useState(0);
   const [pionPositions, setPionPositions] = useState(Array(players).fill(0));
   const [isWinGameOpen, setIsWinGameOpen] = useState(false);
   const [chrono, setChrono] = useState(null);
   const [rotationCount, setRotationCount] = useState(0);
   const [canRemoveCard, setCanRemoveCard] = useState(false);
+  const [selectedCard, setSelectedCard] = useState(null);
+  const [board, setBoard] = useState([]);
+
+  useEffect(() => {
+    setBoard(initializeBoard(playerPions));
+  }, [playerPions]);
 
   useEffect(() => {
     const cardCount = getCardCount(players);
@@ -99,51 +110,73 @@ const GameBoard = () => {
     }
   };
 
-  const movePawn = (direction) => {
-    const directions = {
-      up: -5,
-      right: 1,
-      down: 5,
-      left: -1,
+  const movePawn = (newPosition) => {
+    const currentPosition = pionPositions[currentPlayer];
+    const currentCard = board[currentPosition] || { access: [false, false, false, false] };
+    const newCard = board[newPosition] || { access: [false, false, false, false] };
+
+    const isMoveValid = (currentPos, newPos) => {
+      if (newPos < 0 || newPos >= board.length) {
+        return false;
+      }
+
+      if (!currentCard || !newCard) {
+        return false;
+      }
+
+      if (!currentCard.access || !newCard.access) {
+        return false;
+      }
+
+      const direction = newPos - currentPos;
+      switch (direction) {
+        case -5:
+          return currentCard.access[0] && newCard.access[2];
+        case 5:
+          return currentCard.access[2] && newCard.access[0];
+        case -1:
+          return currentCard.access[3] && newCard.access[1];
+        case 1:
+          return currentCard.access[1] && newCard.access[3];
+        default:
+          return false;
+      }
     };
 
-    if (canMove) {
+    if (isMoveValid(currentPosition, newPosition)) {
       setPionPositions((prevPositions) => {
         const newPositions = [...prevPositions];
-        const newPosition = newPositions[currentPlayer] + directions[direction];
-
-        if (newPosition >= 0 && newPosition < board.length && board[newPosition].id !== 'fake') {
-          newPositions[currentPlayer] = newPosition;
-          endTurn();
-        } else {
-          toast({
-            title: "Déplacement impossible !",
-            description: "Vous ne pouvez pas vous déplacer dans cette direction.",
-          });
-        }
-
+        newPositions[currentPlayer] = newPosition;
         return newPositions;
       });
+      endTurn();
     } else {
       toast({
-        title: "Vous ne pouvez pas avancer !",
-        description: "Vous devez jouer des cartes routes pour avancer",
+        title: "Déplacement impossible !",
+        description: "Vous ne pouvez pas vous déplacer dans cette direction.",
       });
     }
   };
 
-  const placeCardOnBoard = (cardIndex) => {
-    const newPlayerHands = [...playerHands];
-    const card = newPlayerHands[currentPlayer].splice(cardIndex, 1)[0];
-    const newBoard = [...board];
-    const emptyIndex = newBoard.findIndex(c => c.id === 'fake');
-    if (emptyIndex !== -1) {
-      newBoard[emptyIndex] = card;
+  const handleCardClick = (cardIndex) => {
+    setSelectedCard({ cardIndex, card: playerHands[currentPlayer][cardIndex] });
+  };
+
+  const handleBoardClick = (boardIndex) => {
+    if (selectedCard && board[boardIndex].id === 'fake') {
+      const newPlayerHands = [...playerHands];
+      newPlayerHands[currentPlayer].splice(selectedCard.cardIndex, 1);
+      const newBoard = [...board];
+      newBoard[boardIndex] = selectedCard.card;
+
+      setPlayerHands(newPlayerHands);
+      setBoard(newBoard);
+      setSelectedCard(null);
+      setChrono(selectedCard.card.chrono || null);
+      endTurn();
+    } else if (board[boardIndex].id === 'aide') {
+      return false
     }
-    setPlayerHands(newPlayerHands);
-    setBoard(newBoard);
-    setChrono(card.chrono || null);
-    endTurn();
   };
 
   const removeCardFromBoard = (cardIndex) => {
@@ -160,7 +193,13 @@ const GameBoard = () => {
   }, [pionPositions, board.length]);
 
   const endTurn = () => {
-    setCurrentPlayer((prevPlayer) => (prevPlayer + 1) % players);
+    setCurrentPlayer((prevPlayer) => {
+      const nextPlayer = (prevPlayer + 1) % players;
+      if (pionPositions[nextPlayer] === board.length - 1) {
+        return (nextPlayer + 1) % players;
+      }
+      return nextPlayer;
+    });
     setRotationCount(0);
     setCanRemoveCard(false);
   };
@@ -216,7 +255,7 @@ const GameBoard = () => {
       <div className='fixed top-0 right-20 z-50'>
         <EndGame />
       </div>
-      <div className="mt-4 flex max-lg:block">
+      <div className="mt-10 flex max-lg:block">
         <div className="ml-10">
           <h1 className='text-2xl font-bRiver'>Au tour de : {playerNames[currentPlayer]} - {playerPions[currentPlayer]}</h1>
           {playerHands[currentPlayer] && (
@@ -224,24 +263,26 @@ const GameBoard = () => {
               <HandPlayer
                 playerHand={playerHands[currentPlayer]}
                 isHandSpread={true}
-                onCardClick={(cardIndex) => placeCardOnBoard(cardIndex)}
+                onCardClick={handleCardClick}
+                selectedCardIndex={selectedCard ? selectedCard.cardIndex : null}
               />
-              <div className="flex flex-col">
-                <Button className="mt-10 w-[200px]" onClick={drawCard}>Tirer une carte</Button>
-                <div className="mt-4 flex items-center">
-                  <Button className="w-[3rem]" variant={canMove ? "default" : "secondary"} onClick={() => movePawn('up')}><ArrowUp /></Button>
-                  <Button className="w-[3rem]" variant={canMove ? "default" : "secondary"} onClick={() => movePawn('down')}><ArrowDown /></Button>
-                  <Button className="w-[3rem]" variant={canMove ? "default" : "secondary"} onClick={() => movePawn('left')}><ArrowLeft /></Button>
-                  <Button className="w-[3rem]" variant={canMove ? "default" : "secondary"} onClick={() => movePawn('right')}><ArrowRight /></Button>
-                </div>
-              </div>
+              <PlayerActions
+                drawCard={drawCard}
+                movePawn={movePawn}
+                pionPositions={pionPositions}
+                currentPlayer={currentPlayer}
+              />
             </>
           )}
         </div>
         <div className="mx-auto w-[50%] max-lg:w-full lg:ml-12">
           <div className="plateau grid grid-cols-5 gap-0">
             {board.map((card, index) => (
-              <div key={index} className="relative">
+              <div
+                key={index}
+                className={`relative ${selectedCard && board[index].id === 'fake' ? 'hover:opacity-50' : ''}`}
+                onClick={() => handleBoardClick(index)}
+              >
                 <CardRoad
                   card={card}
                   isFaceUp={card.id !== 'fake'}
@@ -274,7 +315,7 @@ const GameBoard = () => {
           </div>
         </div>
         <div className='w-[25%] flex flex-col lg:ml-10'>
-          <CardActionStack />
+          <CardActionStack endTurn={endTurn} />
           <div className='flex justify-around'>
             <Dice onRoll={handleRoll} />
             <Pions />

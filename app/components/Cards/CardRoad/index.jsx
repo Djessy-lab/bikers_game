@@ -12,11 +12,21 @@ const CardRoad = ({ card, style, isFaceUp, isOnBoard, rotationCount, setRotation
     }
   }, [card]);
 
+  const rotateAccess = (access, direction) => {
+    if (direction === 'clockwise') {
+      return [access[3], access[0], access[1], access[2]];
+    } else if (direction === 'counterclockwise') {
+      return [access[1], access[2], access[3], access[0]];
+    }
+    return access;
+  };
+
   const rotateCardRight = () => {
     if (rotationCount > 0) {
       setRotation((prevRotation) => (prevRotation + 90) % 360);
+      card.access = rotateAccess(card.access, 'clockwise');
       setRotationCount((prevCount) => prevCount - 1);
-      if(rotationCount -1 === 0) {
+      if (rotationCount - 1 === 0) {
         onActionComplete();
       }
     }
@@ -25,8 +35,9 @@ const CardRoad = ({ card, style, isFaceUp, isOnBoard, rotationCount, setRotation
   const rotateCardLeft = () => {
     if (rotationCount > 0) {
       setRotation((prevRotation) => (prevRotation - 90 + 360) % 360);
+      card.access = rotateAccess(card.access, 'counterclockwise');
       setRotationCount((prevCount) => prevCount - 1);
-      if(rotationCount -1 === 0) {
+      if (rotationCount - 1 === 0) {
         onActionComplete();
       }
     }

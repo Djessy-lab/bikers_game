@@ -1,13 +1,13 @@
 import React from 'react';
 import CardRoad from '../CardRoad';
 
-const HandPlayer = ({ playerHand, isHandSpread, onCardClick }) => {
+const HandPlayer = ({ playerHand, isHandSpread, onCardClick, selectedCardIndex }) => {
   return (
     <div className="player-hand">
       <div>
         <div className={`flex relative ${isHandSpread ? 'grid grid-cols-2 gap-0' : ''}`}>
           {playerHand.map((card, cardIndex) => (
-            <div key={cardIndex} onClick={() => onCardClick(cardIndex)}>
+            <div key={cardIndex} onClick={() => onCardClick(cardIndex)} className={`card ${selectedCardIndex === cardIndex ? 'opacity-50' : ''}`}>
               <CardRoad
                 card={card}
                 isFaceUp={isHandSpread}
