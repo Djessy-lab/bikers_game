@@ -4,10 +4,16 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { useDice } from '../DiceContext/index';
 
-const basePath = '/img/dice/'
 
-const Dice = ({ onRoll }) => {
-  const faces = ["1.png", "2.png", "3.png", "4.png", "5.png", "6.png"];
+const Dice = ({ onRoll, size }) => {
+  const faces = [
+    { value: 'suppr', src: "/img/dice/1.png" },
+    { value: 'droite', src: "/img/dice/2.png" },
+    { value: 'dist', src: "/img/dice/3.png" },
+    { value: 'zero', src: "/img/dice/4.png" },
+    { value: 'gauche', src: "/img/dice/5.png" },
+    { value: 'dist', src: "/img/dice/6.png" }
+  ];
   const [currentFace, setCurrentFace] = useState(0);
   const [rolling, setRolling] = useState(false);
   const [spinDirection, setSpinDirection] = useState('');
@@ -17,23 +23,29 @@ const Dice = ({ onRoll }) => {
     setRolling(true);
     setSpinDirection(Math.random() > 0.5 ? 'animate-spin-clockwise' : 'animate-spin-counterclockwise');
     setTimeout(() => {
-      const newFace = Math.floor(Math.random() * 6);
+      const newFace = Math.floor(Math.random() * faces.length);
       setCurrentFace(newFace);
       setDiceValue(newFace + 1);
       setRolling(false);
       onRoll(newFace + 1);
+      console.log(newFace + 1);
+      console.log(faces[newFace]);
     }, 1000);
   };
 
+  const diceSize = size === 'small' ? 'w-16 h-16' : 'w-24 h-24';
+  const imageSize = size === 'small' ? 64 : 96;
+  const perspective = size === 'small' ? '' : 'perspective-1000';
+
   return (
-    <div className="flex items-center justify-center h-48 perspective-1000" onClick={rollDice}>
-      <div className={`dice w-24 h-24 flex items-center justify-center text-4xl bg-white border border-gray-100 rounded-lg transition-transform duration-1000 transform-style-preserve-3d ${rolling ? spinDirection : ''}`}>
-        <Image src={`${basePath}${faces[currentFace]}`} alt={`Face ${currentFace + 1}`} width={96} height={96} className="face front" />
-        <Image src={`${basePath}${faces[1]}`} alt="Face 2" width={96} height={96} className="face back" />
-        <Image src={`${basePath}${faces[2]}`} alt="Face 3" width={96} height={96} className="face left" />
-        <Image src={`${basePath}${faces[3]}`} alt="Face 4" width={96} height={96} className="face right" />
-        <Image src={`${basePath}${faces[4]}`} alt="Face 5" width={96} height={96} className="face top" />
-        <Image src={`${basePath}${faces[5]}`} alt="Face 6" width={96} height={96} className="face bottom" />
+    <div className={`flex items-center justify-center h-16 ${perspective}`} onClick={size !== 'small' ? rollDice : null}>
+      <div className={`dice ${diceSize} flex items-center justify-center text-4xl bg-white border border-gray-100 rounded-lg transition-transform duration-1000 transform-style-preserve-3d ${rolling ? spinDirection : ''}`}>
+        <Image src={faces[currentFace].src} alt={`Face ${currentFace + 1}`} width={imageSize} height={imageSize} className="face front" />
+        <Image src={faces[1].src} alt="Face 2" width={imageSize} height={imageSize} className="face back" />
+        <Image src={faces[2].src} alt="Face 3" width={imageSize} height={imageSize} className="face left" />
+        <Image src={faces[3].src} alt="Face 4" width={imageSize} height={imageSize} className="face right" />
+        <Image src={faces[4].src} alt="Face 5" width={imageSize} height={imageSize} className="face top" />
+        <Image src={faces[5].src} alt="Face 6" width={imageSize} height={imageSize} className="face bottom" />
       </div>
     </div>
   );

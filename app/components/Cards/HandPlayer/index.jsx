@@ -5,7 +5,7 @@ const HandPlayer = ({ playerHand, isHandSpread, onCardClick, selectedCardIndex }
   return (
     <div className="player-hand">
       <div>
-        <div className={`flex relative ${isHandSpread ? 'grid grid-cols-2 gap-0' : ''}`}>
+        <div className={`flex relative ${isHandSpread ? 'grid grid-cols-2 gap-0 max-lg:grid-cols-4' : ''}`}>
           {playerHand.map((card, cardIndex) => (
             <div key={cardIndex} onClick={() => onCardClick(cardIndex)} className={`card ${selectedCardIndex === cardIndex ? 'opacity-50' : ''}`}>
               <CardRoad

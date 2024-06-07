@@ -10,10 +10,14 @@ const CardAction = ({ card, style, isTopCard, discardCard, endTurn }) => {
   const [chronoReset, setChronoReset] = useState(false);
   const [buttonText, setButtonText] = useState("Démarrer Chrono");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const handleCardClick = (e) => {
     if (e.target.tagName !== 'BUTTON') {
       setIsFlipped(!isFlipped);
+      setIsAnimating(true);
+      setIsDialogOpen(true);
+      setIsAnimating(false);
     }
   };
 

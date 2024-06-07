@@ -97,6 +97,7 @@
   }
 }
 
+
 .perspective-1000 {
   perspective: 1000px;
 }
@@ -108,8 +109,6 @@
 .dice {
   position: relative;
   transform-style: preserve-3d;
-  width: 6rem;
-  height: 6rem;
 }
 
 .face {

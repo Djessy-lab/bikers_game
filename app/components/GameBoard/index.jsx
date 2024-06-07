@@ -12,6 +12,7 @@ import Pions from '../Pions';
 import PionBoard from '../PionBoard';
 import WinGame from '../WinGame';
 import PlayerActions from '../PlayerActions';
+import { Button } from '@/components/ui/button';
 
 const shuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
@@ -77,6 +78,7 @@ const GameBoard = () => {
   const [canRemoveCard, setCanRemoveCard] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
   const [board, setBoard] = useState([]);
+  const [showPassTurnButton, setShowPassTurnButton] = useState(false);
 
   useEffect(() => {
     setBoard(initializeBoard(playerPions));
@@ -175,7 +177,7 @@ const GameBoard = () => {
       setChrono(selectedCard.card.chrono || null);
       endTurn();
     } else if (board[boardIndex].id === 'aide') {
-      return false
+      return false;
     }
   };
 
@@ -202,23 +204,36 @@ const GameBoard = () => {
     });
     setRotationCount(0);
     setCanRemoveCard(false);
+    setShowPassTurnButton(false);
   };
 
   const handleRoll = (diceValue) => {
-    if (diceValue === 2 || diceValue === 6) {
-      setRotationCount(2);
-    } else if (diceValue === 1) {
-      setCanRemoveCard(true);
-    } else if (diceValue === 3) {
-      setTimeout(() => {
-        distributeCardsToAllPlayers();
-      }, 1000);
-    } else {
-      setRotationCount(0);
-      setCanRemoveCard(false);
-      setTimeout(() => {
-        endTurn();
-      }, 1000);
+    console.log(`Dice rolled: ${diceValue}`);
+    switch (diceValue) {
+      case 1:
+        setCanRemoveCard(true);
+        setShowPassTurnButton(true);
+        break;
+      case 2:
+        setRotationCount(2);
+        setShowPassTurnButton(true);
+        break;
+      case 3:
+        setTimeout(() => {
+          distributeCardsToAllPlayers();
+        }, 1000);
+        break;
+      case 4:
+        setTimeout(() => {
+          endTurn();
+        }, 1000);
+        break;
+      case 5:
+        setRotationCount(2);
+        setShowPassTurnButton(true);
+        break;
+      default:
+        break;
     }
   };
 
@@ -316,8 +331,15 @@ const GameBoard = () => {
         </div>
         <div className='w-[25%] flex flex-col lg:ml-10'>
           <CardActionStack endTurn={endTurn} />
-          <div className='flex justify-around'>
-            <Dice onRoll={handleRoll} />
+          <div className='flex justify-around items-center mb-[1.625rem]'>
+            <div className='flex flex-col items-center'>
+              <Dice onRoll={handleRoll} size={showPassTurnButton ? 'small' : 'large'} className={showPassTurnButton ? '' : 'mb-8'} />
+              {showPassTurnButton && (
+                <Button onClick={endTurn} size='sm' className='mt-2'>
+                  Passer mon tour
+                </Button>
+              )}
+            </div>
             <Pions />
           </div>
           <div className='w-full'>
