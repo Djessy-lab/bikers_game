@@ -272,7 +272,7 @@ const GameBoard = () => {
       </div>
       <div className="mt-10 flex max-lg:block">
         <div className="ml-10">
-          <h1 className='text-2xl font-bRiver'>Au tour de : {playerNames[currentPlayer]} - {playerPions[currentPlayer]}</h1>
+          <h1 className='text-2xl font-bRiver'>Au tour de : <span className='text-orange-500'>{playerNames[currentPlayer]} - {playerPions[currentPlayer]}</span></h1>
           {playerHands[currentPlayer] && (
             <>
               <HandPlayer
@@ -321,7 +321,7 @@ const GameBoard = () => {
                         transform: 'translate(30%, -15%)'
                       }}
                     >
-                      <PionBoard pion={playerPions[pionIndex]} />
+                      <PionBoard pion={playerPions[pionIndex]} pionIndex={pionIndex} currentPlayer={currentPlayer} />
                     </div>
                   )
                 ))}
@@ -340,7 +340,7 @@ const GameBoard = () => {
                 </Button>
               )}
             </div>
-            <Pions />
+              <Pions />
           </div>
           <div className='w-full'>
             <Pieces />

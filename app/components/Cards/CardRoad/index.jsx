@@ -74,8 +74,8 @@ const CardRoad = ({ card, style, isFaceUp, isOnBoard, rotationCount, setRotation
               && card.name !== 'aide'
               ? 'hover:border-[.2rem] hover:border-dashed hover:rounded-lg hover:border-red-500'
               : ''}`}>
-            <div className="w-full h-full">
-              <Image src={card.image} className='rounded-sm shadow-md max-lg:h-20 ' alt={card.name} width={200} height={200} priority />
+            <div className="w-full h-full ">
+              <Image src={card.image} className='rounded-sm shadow-md max-lg:h-20' alt={card.name} width={200} height={200} priority />
             </div>
           </div>
           <div className="absolute w-full h-full bg-4 text-white flex flex-col items-center rounded-sm shadow-md backface-hidden rotate-y-180 ">
